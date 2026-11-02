@@ -4,6 +4,13 @@ document.querySelector('.menu-toggle')?.addEventListener('click', (event) => {
   event.currentTarget.setAttribute('aria-expanded', String(open));
 });
 
+document.querySelectorAll('.nav-links a').forEach((link) => {
+  link.addEventListener('click', () => {
+    document.querySelector('.nav-links')?.classList.remove('open');
+    document.querySelector('.menu-toggle')?.setAttribute('aria-expanded', 'false');
+  });
+});
+
 document.querySelectorAll('[data-demo-whatsapp]').forEach((button) => {
   button.addEventListener('click', (event) => {
     event.preventDefault();
@@ -106,4 +113,22 @@ if (form) {
     calculate();
   });
   calculate();
+}
+
+const revealItems = document.querySelectorAll([
+  '.section-head', '.feature', '.split-media', '.copy', '.info-item',
+  '.gallery-card', '.room-card', '.address-card', '.map-frame', '.route-item',
+  '.booking-form', '.estimate', '.faq-item', '.cta-inner'
+].join(','));
+
+if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  revealItems.forEach((item) => item.classList.add('reveal'));
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: .12, rootMargin: '0px 0px -32px' });
+  revealItems.forEach((item) => revealObserver.observe(item));
 }
